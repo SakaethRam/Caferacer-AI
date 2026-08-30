@@ -286,4 +286,4 @@ caferacer
 
 ## 9. License
 
-Distributed under the MIT License. See `LICENSE` for further details.
+See `LICENSE` for further details.
