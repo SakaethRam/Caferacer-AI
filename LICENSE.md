@@ -1,0 +1,72 @@
+# CafeRacer Restricted Use License
+
+Copyright 2026 CafeRacer Authors
+
+## 1. Grant of Limited Rights
+
+Subject to the terms of this License, permission is granted to individuals to view and inspect the CafeRacer source code solely for personal, educational, evaluation, and non-commercial research purposes.
+
+No rights are granted beyond those expressly stated in this License.
+
+## 2. Prohibited Uses
+
+Without prior written permission from the CafeRacer Authors, you may NOT:
+
+* use CafeRacer or any portion of it for commercial purposes;
+* sell, license, sublicense, lease, rent, or otherwise monetize CafeRacer;
+* distribute, redistribute, publish, mirror, or make CafeRacer or derivative versions available to third parties;
+* incorporate CafeRacer or any substantial portion of it into a commercial product, service, platform, or offering;
+* offer CafeRacer as a hosted, managed, SaaS, API, or other commercial service;
+* use CafeRacer or its source code to develop or operate a competing commercial product;
+* claim ownership of CafeRacer or its original source code;
+* use the CafeRacer name, logo, trademarks, branding, or other project identifiers without prior written permission.
+
+## 3. Patent Rights
+
+This License grants **no patent license or patent rights whatsoever**.
+
+No patent rights are granted, transferred, waived, licensed, or implied under this License, whether expressly, by implication, estoppel, or otherwise.
+
+Any use of CafeRacer that would require a patent license is prohibited unless separately authorized in writing by the applicable patent holder or CafeRacer Authors.
+
+## 4. Modification
+
+You may inspect and modify a private copy of CafeRacer solely for personal, educational, evaluation, or non-commercial research purposes.
+
+Modified versions may not be distributed, published, commercially deployed, sublicensed, sold, or otherwise made available to third parties without prior written permission.
+
+## 5. Attribution
+
+Any permitted private or non-commercial use must retain the original copyright notice and this License.
+
+Copyright 2026 CafeRacer Authors
+
+## 6. Commercial and Distribution Permissions
+
+Commercial use, distribution, redistribution, sublicensing, and public hosting are **not permitted by default**.
+
+Separate written authorization from the CafeRacer Authors is required before engaging in any such activity.
+
+## 7. No Warranty
+
+CafeRacer is provided on an **"AS IS"** BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, warranties of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE.
+
+The CafeRacer Authors shall not be liable for any claim, damages, or other liability arising from the use of the software, to the maximum extent permitted by applicable law.
+
+## 8. Reservation of Rights
+
+All rights not expressly granted under this License are reserved by the CafeRacer Authors.
+
+Nothing in this License shall be interpreted as granting any right to use, reproduce, distribute, commercialize, sublicense, patent, trademark, or otherwise exploit CafeRacer except as expressly permitted above.
+
+## 9. Termination
+
+Any rights granted under this License automatically terminate upon violation of its terms.
+
+Upon termination, all copies and modified versions of CafeRacer in your possession must cease to be used and must not be distributed or commercially exploited.
+
+---
+
+**CafeRacer Restricted Use License**
+
+Copyright 2026 CafeRacer Authors. All rights reserved.
