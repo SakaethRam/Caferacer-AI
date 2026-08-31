@@ -4,7 +4,7 @@
 **Purpose:** Representative agent trajectories from the CafeRacer development process.
 **Source:** Actual LatentCode session history.
 
-## Trajectory 01 — Static AST Parser & Symbol Table Extraction
+## Trajectory 01 : Static AST Parser & Symbol Table Extraction
 
 **Objective:** Extract line-level symbol coordinates, exported declarations, Express endpoints, and database ORM references using static AST parsing.
 
@@ -26,7 +26,7 @@ Implemented static AST parser in `server/services/parser.ts:15-202`.
 **Impact:**  
 Provided the structural code metadata necessary for dependency graph construction and line-level citations.
 
-## Trajectory 02 — Relative Specifier Path Resolver & Directed Adjacency Graph
+## Trajectory 02 : Relative Specifier Path Resolver & Directed Adjacency Graph
 
 **Objective:** Resolve relative import specifiers and construct directed dependency graph topology.
 
@@ -45,7 +45,7 @@ Created `server/services/graph.ts:8-204` with forward/reverse graph adjacency st
 **Impact:**  
 Enabled lookup of both upstream dependencies and downstream reverse dependents across the repository.
 
-## Trajectory 03 — 3-Hop Reverse BFS Change Impact Simulator
+## Trajectory 03 : 3-Hop Reverse BFS Change Impact Simulator
 
 **Objective:** Simulate the downstream blast radius of proposed code changes using reverse dependency graph traversal.
 
@@ -64,7 +64,7 @@ Implemented `server/services/impact.ts:77-248` returning an `ImpactAnalysisConte
 **Impact:**  
 Allowed CafeRacer to simulate downstream regression risks across dependency chains before code modification.
 
-## Trajectory 04 — Subgraph-Grounded Context Retrieval & Gemini Reasoning
+## Trajectory 04 : Subgraph-Grounded Context Retrieval & Gemini Reasoning
 
 **Objective:** Retrieve query-relevant context subgraphs with 1-hop neighbor propagation for grounded LLM reasoning.
 
@@ -83,7 +83,7 @@ Implemented `server/services/context.ts:32-190` and `server/services/gemini.ts:3
 **Impact:**  
 Improved LLM answer grounding by conditioning model outputs on extracted AST subgraphs and verified line citations.
 
-## Trajectory 05 — 5-Node Architectural Layer Classification & Aggregation
+## Trajectory 05 : 5-Node Architectural Layer Classification & Aggregation
 
 **Objective:** Classify repository source files into 5 architectural layers and aggregate them into high-level graph nodes.
 
@@ -102,7 +102,7 @@ Delivered frontend architectural services in `src/services/architectureClassifie
 **Impact:**  
 Provided high-level architectural abstraction for exploring repository file organization.
 
-## Trajectory 06 — Custom React Flow Graph Visualization Nodes
+## Trajectory 06 : Custom React Flow Graph Visualization Nodes
 
 **Objective:** Render interactive custom React Flow canvas nodes for individual source files and aggregated 5-node architectural layers.
 
@@ -121,7 +121,7 @@ Built visualization components in `src/components/graph/GraphVisualizer.tsx`, `C
 **Impact:**  
 Enabled visual exploration of repository graph topology and architectural layer boundaries.
 
-**## Trajectory 07 — CLI Terminal Ingestion & Cloud Zip Transfer**
+## Trajectory 07 : CLI Terminal Ingestion & Cloud Zip Transfer**
 
 ****Objective:**** Package local workspace files into in-memory ZIP buffers and transmit them to the remote API server via terminal CLI.
 
@@ -145,7 +145,7 @@ Implemented CLI binary launcher `bin/caferacer.js` and server ZIP ingestion hand
 
 Enabled local codebase ingestion directly from the developer terminal through a short setup and execution workflow.
 
-## Trajectory 08 — Grounded Q&A UI & Evidence Panel Component
+## Trajectory 08 : Grounded Q&A UI & Evidence Panel Component
 
 **Objective:** Render structured Q&A evidence items including file paths, relevance scores, exported symbols, and interactive code snippets in the UI.
 
@@ -164,7 +164,7 @@ Delivered `src/components/evidence/EvidencePanel.tsx` integrated into the web co
 **Impact:**  
 Provided clear visibility into source code evidence supporting AI reasoning outputs.
 
-## Trajectory 09 — Benchmark Specification & Evaluation Rubric
+## Trajectory 09 : Benchmark Specification & Evaluation Rubric
 
 **Objective:** Define a 10-case evaluation benchmark to measure reasoning accuracy differences between Baseline LLM and CafeRacer-Assisted Gemini.
 
@@ -183,7 +183,7 @@ Authored benchmark specification in `evaluation/CAFERACER_BENCHMARK.md` recordin
 **Impact:**  
 Established a quantitative evaluation metric for measuring structural codebase reasoning improvements.
 
-## Trajectory 10 — Iterative Improvement Changelog & Evidence Schema
+## Trajectory 10 : Iterative Improvement Changelog & Evidence Schema
 
 **Objective:** Document technical evolution, architectural shifts, baseline limitations, and verifiable code references.
 
