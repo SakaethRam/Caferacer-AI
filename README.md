@@ -204,7 +204,7 @@ npm install
 npm link
 ```
 
-2. Run the CLI in any repository on your machine:
+2. Run the CLI in any codebase directory on your machine:
 ```bash
 caferacer
 ```
