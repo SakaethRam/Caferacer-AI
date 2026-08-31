@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import readline from 'readline';
-import { exec, spawn } from 'child_process';
-import http from 'http';
+import { exec } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -10,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
-const SERVER_URL = process.env.CAFERACER_SERVER_URL || 'http://localhost:5000';
+const SERVER_URL = process.env.CAFERACER_SERVER_URL || 'https://caferacer-api.onrender.com';
 const WEB_URL = process.env.CAFERACER_WEB_URL || 'https://caferacer-nu.vercel.app';
 
 function openBrowser(url) {
@@ -24,43 +23,12 @@ function openBrowser(url) {
 }
 
 async function checkServerHealth() {
-  return new Promise((resolve) => {
-    const req = http.get(`${SERVER_URL}/api/health`, (res) => {
-      resolve(res.statusCode === 200);
-    });
-    req.on('error', () => resolve(false));
-    req.end();
-  });
-}
-
-function startServerIfNeeded() {
-  return new Promise((resolve) => {
-    checkServerHealth().then((isAlive) => {
-      if (isAlive) {
-        resolve();
-        return;
-      }
-
-      console.log('Starting CafeRacer server engine...');
-      const child = spawn('npm', ['run', 'dev:server'], {
-        cwd: PROJECT_ROOT,
-        shell: true,
-        stdio: 'ignore',
-        detached: true,
-      });
-      child.unref();
-
-      let attempts = 0;
-      const interval = setInterval(async () => {
-        attempts++;
-        const ready = await checkServerHealth();
-        if (ready || attempts > 20) {
-          clearInterval(interval);
-          resolve();
-        }
-      }, 500);
-    });
-  });
+  try {
+    const res = await fetch(`${SERVER_URL}/api/health`);
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 async function postJSON(endpoint, body) {
@@ -112,7 +80,10 @@ function promptInteractive() {
 }
 
 async function main() {
-  await startServerIfNeeded();
+  const isServerAlive = await checkServerHealth();
+  if (!isServerAlive) {
+    console.log(`[Notice] Cloud API server at ${SERVER_URL} is waking up or initializing...`);
+  }
 
   const { choice } = await promptInteractive();
 
