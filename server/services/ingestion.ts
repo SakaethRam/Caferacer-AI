@@ -346,6 +346,122 @@ export async function ingestRepository(rawUrl: string): Promise<IngestedReposito
 }
 
 /**
+ * Ingests a raw zip buffer uploaded from local CLI or client.
+ */
+export async function ingestZipBuffer(zipBuffer: Buffer, nameHint: string = 'local-repo'): Promise<IngestedRepository> {
+  let zip: AdmZip;
+  try {
+    zip = new AdmZip(zipBuffer);
+  } catch (err) {
+    throw new IngestionError(`Failed to parse repository ZIP archive: ${(err as Error).message}`, 400);
+  }
+
+  const zipEntries = zip.getEntries();
+  if (zipEntries.length === 0) {
+    throw new IngestionError('The uploaded repository ZIP archive is empty.', 400);
+  }
+
+  // Detect root prefix if present (e.g., folder inside zip)
+  let rootPrefix = '';
+  if (zipEntries[0].isDirectory) {
+    rootPrefix = zipEntries[0].entryName;
+  }
+
+  const folderName = nameHint.toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+  const repoId = `local_${folderName}_${Date.now()}`;
+
+  const sourceFiles = new Map<string, SourceFile>();
+  let totalDiscoveredFiles = 0;
+  let skippedFiles = 0;
+  let totalSourceLines = 0;
+  let totalBytes = 0;
+  const languages: Record<string, number> = {};
+
+  for (const entry of zipEntries) {
+    if (entry.isDirectory) continue;
+
+    let relativePath = entry.entryName;
+    if (rootPrefix && relativePath.startsWith(rootPrefix)) {
+      relativePath = relativePath.slice(rootPrefix.length);
+    }
+
+    if (!relativePath || relativePath.includes('..')) {
+      skippedFiles++;
+      continue;
+    }
+
+    totalDiscoveredFiles++;
+    const fileSize = entry.header.size;
+
+    if (shouldIgnorePath(relativePath, fileSize)) {
+      skippedFiles++;
+      continue;
+    }
+
+    if (sourceFiles.size >= MAX_SOURCE_FILES) {
+      skippedFiles++;
+      continue;
+    }
+
+    let content = '';
+    try {
+      content = entry.getData().toString('utf8');
+    } catch {
+      skippedFiles++;
+      continue;
+    }
+
+    const lines = content.split('\n').length;
+    const extension = relativePath.split('.').pop()?.toLowerCase() || '';
+    const language = detectLanguage(extension);
+
+    const sourceFile: SourceFile = {
+      path: relativePath,
+      content,
+      size: fileSize,
+      lines,
+      extension,
+      language,
+    };
+
+    sourceFiles.set(relativePath, sourceFile);
+
+    totalSourceLines += lines;
+    totalBytes += fileSize;
+    languages[language] = (languages[language] || 0) + 1;
+  }
+
+  if (sourceFiles.size === 0) {
+    throw new IngestionError('No supported source code files found in the uploaded ZIP archive.', 400);
+  }
+
+  const sourceFileList = Array.from(sourceFiles.values());
+  const tree = buildFileTree(sourceFileList);
+
+  const ingestedRepo: IngestedRepository = {
+    id: repoId,
+    owner: 'local',
+    name: nameHint,
+    url: nameHint,
+    defaultBranch: 'main',
+    ingestedAt: new Date().toISOString(),
+    files: sourceFiles,
+    tree,
+    stats: {
+      totalDiscoveredFiles,
+      analyzedSourceFiles: sourceFiles.size,
+      skippedFiles,
+      totalSourceLines,
+      totalBytes,
+      languages,
+    },
+  };
+
+  repositoryStore.set(repoId, ingestedRepo);
+  return ingestedRepo;
+}
+
+/**
  * Ingests a local filesystem repository (Root path) cleanly using the same filtering & store logic.
  */
 export async function ingestLocalDirectory(dirPath: string): Promise<IngestedRepository> {
