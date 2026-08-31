@@ -187,55 +187,7 @@ The data flow within CafeRacer moves through four distinct operational phases: I
 
 ---
 
-## 6. Prerequisites and Environment Setup (For Developers via PR)
-
-### System Requirements
-
-- Node.js: `v18.16.0` or higher
-- npm: `v9.x` or higher
-- PostgreSQL Database: Supabase instance with active service credentials
-
-### Supabase Database Configuration
-
-CafeRacer securely retrieves its AI service configuration from PostgreSQL hosted on Supabase. Execute the following SQL script in your Supabase SQL Editor to initialize the necessary configuration schema:
-
-```sql
-CREATE TABLE IF NOT EXISTS app_settings (
-  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  key TEXT UNIQUE NOT NULL,
-  value TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-INSERT INTO app_settings (key, value)
-VALUES
-  ('gemini_api_key', 'YOUR_GEMINI_API_KEY_HERE'),
-  ('gemini_model', 'gemini-2.0-flash')
-ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
-```
-
-### Environment Variable Setup
-
-Create a `.env` file in the repository root directory by copying `.env.example`:
-
-```bash
-cp .env.example .env
-```
-
-Configure `.env` with the appropriate parameters:
-
-```env
-PORT=5000
-NODE_ENV=development
-SUPABASE_URL=https://your-supabase-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-```
-
----
-
-## 7. CLI FEATURE (For Users): Installation and CLI Setup
-
-### For End-Users (Instant CLI Usage)
+## 6. CLI FEATURE (FOR END-USERS): Installation and CLI Setup
 
 Users do **not** need to configure any database or Supabase credentials. The CLI connects to CafeRacer's managed cloud API service out of the box.
 
@@ -259,7 +211,7 @@ caferacer
 
 ---
 
-## 8. Operating Instructions
+## 7. Operating Instructions
 
 ### Option A: Terminal CLI Workflow
 
@@ -274,7 +226,7 @@ caferacer
 
 ### Option B: Web Console Interface
 
-1. Navigate to `https://caferacer-nu.vercel.app` or open `http://localhost:3000` when running locally.
+1. Navigate to `https://caferacer-nu.vercel.app`.
 2. Step 01 (REPO): Paste a public GitHub repository link or select a local workspace.
 3. Step 02 (ANALYZE): Observe the real-time progress as AST symbol tables, endpoint signatures, and dependency edges are calculated.
 4. Step 03 (UNDERSTAND): Explore the interactive 5-node architecture canvas, inspect file nodes, and run the 3-hop reverse BFS impact simulator.
@@ -284,4 +236,4 @@ caferacer
 
 ## 9. License
 
-Distributed under the MIT License. See `LICENSE` for further details.
+See `LICENSE` for further details.
