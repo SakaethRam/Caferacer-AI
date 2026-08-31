@@ -24,34 +24,30 @@ import { ImpactAnalysisContext } from './impact.js';
 // There is NO GEMINI_API_KEY or GEMINI_MODEL environment variable.
 // ============================================================
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Lazy Supabase client initialization so the server can boot safely
+let supabaseClient: ReturnType<typeof createClient> | null = null;
 
-  console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
-console.log(
-  'SUPABASE_SERVICE_ROLE_KEY:',
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-    ? 'LOADED'
-    : 'MISSING'
-);
+function getSupabaseClient() {
+  if (supabaseClient) return supabaseClient;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error(
-    'Supabase configuration is missing. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
-  );
-}
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(
-  SUPABASE_URL,
-  SUPABASE_SERVICE_ROLE_KEY,
-  {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error(
+      'Supabase configuration is missing on the server. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
+    );
+  }
+
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
     },
-  }
-);
+  });
+
+  return supabaseClient;
+}
 
 // ============================================================
 // GEMINI CONFIGURATION
@@ -88,7 +84,7 @@ async function getGeminiConfig(): Promise<GeminiConfig> {
     return cachedGeminiConfig;
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabaseClient()
     .from('app_settings')
     .select('key, value')
     .in('key', [
@@ -108,7 +104,7 @@ async function getGeminiConfig(): Promise<GeminiConfig> {
   }
 
   const settings = Object.fromEntries(
-    (data ?? []).map((item) => [
+    ((data as Array<{ key: string; value: string }>) ?? []).map((item) => [
       item.key,
       item.value,
     ])
