@@ -1,4 +1,4 @@
-# CafeRacer Restricted Use License
+# CafeRacer License
 
 Copyright 2026 CafeRacer Authors
 
