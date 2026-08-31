@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { ingestRepository, ingestLocalDirectory, getIngestedRepository, IngestionError } from '../services/ingestion.js';
+import express, { Router } from 'express';
+import { ingestRepository, ingestLocalDirectory, ingestZipBuffer, getIngestedRepository, IngestionError } from '../services/ingestion.js';
 import { buildDependencyGraph } from '../services/graph.js';
 import { retrieveContext } from '../services/context.js';
 import { analyzeGraphImpact } from '../services/impact.js';
@@ -45,6 +45,44 @@ router.post('/ingest', async (req, res) => {
     }
     console.error('Ingestion error:', err);
     res.status(500).json({ error: 'An unexpected error occurred during repository ingestion.' });
+  }
+});
+
+// POST /api/repo/ingest-zip - Ingest raw ZIP payload sent from local CLI or web client
+router.post('/ingest-zip', express.raw({ type: 'application/zip', limit: '50mb' }), async (req, res) => {
+  try {
+    const zipBuffer = req.body;
+    if (!zipBuffer || !(zipBuffer instanceof Buffer) || zipBuffer.length === 0) {
+      res.status(400).json({ error: 'ZIP archive binary payload is required.' });
+      return;
+    }
+
+    const nameHint = (req.headers['x-repo-name'] as string) || 'local-workspace';
+    const repo = await ingestZipBuffer(zipBuffer, nameHint);
+
+    if (!repo.graph) {
+      repo.graph = buildDependencyGraph(repo);
+    }
+
+    const response: IngestResponse = {
+      success: true,
+      repoId: repo.id,
+      owner: repo.owner,
+      name: repo.name,
+      url: repo.url,
+      defaultBranch: repo.defaultBranch,
+      stats: repo.stats,
+      tree: repo.tree,
+    };
+
+    res.json(response);
+  } catch (err) {
+    if (err instanceof IngestionError) {
+      res.status(err.statusCode).json({ error: err.message });
+      return;
+    }
+    console.error('Zip ingestion error:', err);
+    res.status(500).json({ error: 'An unexpected error occurred during zip archive ingestion.' });
   }
 });
 
