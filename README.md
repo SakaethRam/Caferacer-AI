@@ -112,7 +112,7 @@ The data flow within CafeRacer moves through four distinct operational phases: I
 |                                 INGESTION PHASE                                   |
 +-----------------------------------------------------------------------------------+
 |  Local CLI Workstation                   Remote GitHub Repository                 |
-|  (caferacer CLI executable)              (User URL Input in Web UI)              |
+|  (caferacer CLI executable)              (User URL Input in Web UI)               |
 |             |                                        |                            |
 |             v                                        v                            |
 |  POST /api/repo/ingest-local             POST /api/repo/ingest-github             |
@@ -124,16 +124,16 @@ The data flow within CafeRacer moves through four distinct operational phases: I
 +-----------------------------------------------------------------------------------+
 |  1. File System Traversal & Extension Filtering (.ts, .tsx, .js, .jsx)            |
 |  2. AST Parsing (@babel/parser, @babel/traverse)                                  |
-|     - Extract Functions, Classes, Variables, and Component Exports               |
+|     - Extract Functions, Classes, Variables, and Component Exports                |
 |     - Extract Express/HTTP Endpoint Handlers and DB Queries                       |
-|  3. Import Specifier Path Resolution (Relative & Index path candidate matching)    |
+|  3. Import Specifier Path Resolution (Relative & Index path candidate matching)   |
 |  4. Adjacency Matrix & Reverse Adjacency List Construction                        |
-|  5. 5-Node Architectural Layer Classification                                    |
+|  5. 5-Node Architectural Layer Classification                                     |
 +-----------------------------------------------------------------------------------+
                                       |
                                       v
 +-----------------------------------------------------------------------------------+
-|                   IMPACT SIMULATION & QUERY PROCESSING PHASE                       |
+|                   IMPACT SIMULATION & QUERY PROCESSING PHASE                      |
 +-----------------------------------------------------------------------------------+
 |  User Query / Proposed Code Change                                                |
 |             |                                                                     |
@@ -187,7 +187,7 @@ The data flow within CafeRacer moves through four distinct operational phases: I
 
 ---
 
-## 6. Prerequisites and Environment Setup
+## 6. Prerequisites and Environment Setup (For Developers via PR)
 
 ### System Requirements
 
@@ -233,7 +233,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
 ---
 
-## 7. Installation and CLI Setup
+## 7. CLI FEATURE (For Users): Installation and CLI Setup
 
 ### For End-Users (Instant CLI Usage)
 
