@@ -1,0 +1,85 @@
+{
+  "baseline": {
+    "change": "Naive full-file text scanning and keyword context assembly without static structural parsing",
+    "evidence_sources": [
+      "Untracked import specifiers without resolution",
+      "Lack of reverse dependency list structure for impact analysis"
+    ],
+    "commits": [],
+    "code_references": []
+  },
+  "iterations": [
+    {
+      "id": "iteration-1",
+      "name": "Babel AST Parser & Symbol Table Extraction",
+      "change": "Implemented static AST parsing using @babel/parser and @babel/traverse to extract symbols, exports, API endpoints, and database ORM references",
+      "evidence_sources": [
+        "Line range coordinate extraction for function, class, type, and interface symbols",
+        "HTTP route signature parsing (app.get, router.post) and ORM reference detection"
+      ],
+      "commits": [],
+      "code_references": [
+        "server/services/parser.ts:15-202"
+      ],
+      "decision": "KEPT"
+    },
+    {
+      "id": "iteration-2",
+      "name": "Specifier Path Resolver and Directed Adjacency Graph",
+      "change": "Implemented multi-extension path resolution (resolveImportPath) and constructed forward/reverse adjacency lists (buildDependencyGraph)",
+      "evidence_sources": [
+        "Forward adjacencyList (source -> target) and reverse reverseAdjacency (target -> dependent) construction",
+        "Layer classification of nodes into 5 architectural types (endpoint, db_model, component, utility)"
+      ],
+      "commits": [],
+      "code_references": [
+        "server/services/graph.ts:8-204"
+      ],
+      "decision": "KEPT"
+    },
+    {
+      "id": "iteration-3",
+      "name": "3-Hop Reverse BFS Change Impact Simulator",
+      "change": "Implemented candidate seed node selection and a 3-hop reverse Breadth-First Search (BFS) graph traversal algorithm for downstream change impact analysis",
+      "evidence_sources": [
+        "Reverse BFS traversal bounded to maximum 3 hops from seed nodes",
+        "Step-by-step impact chain path construction and bounded code snippet extraction (up to 80 lines)"
+      ],
+      "commits": [],
+      "code_references": [
+        "server/services/impact.ts:77-248"
+      ],
+      "decision": "KEPT"
+    },
+    {
+      "id": "iteration-4",
+      "name": "Subgraph-Grounded Context Retrieval and LLM Integration",
+      "change": "Implemented term-scored context retrieval (retrieveContext) and runtime credential loading for LLM Q&A with line citations",
+      "evidence_sources": [
+        "Runtime credential loading from external settings storage",
+        "Prompt structure enforcing file path and line number citations backed by retrieved AST subgraphs"
+      ],
+      "commits": [],
+      "code_references": [
+        "server/services/context.ts:32-190",
+        "server/services/gemini.ts:32-132"
+      ],
+      "decision": "KEPT"
+    }
+  ],
+  "final": {
+    "change": "Integrated AST parsing, directed adjacency graph, 3-hop reverse BFS, and grounded LLM RAG into a static codebase intelligence engine",
+    "evidence_sources": [
+      "Static graph topology construction",
+      "Line-level AST symbol extraction and citations",
+      "Downstream impact path identification up to 3 edge hops",
+      "Sanitized prompt context delivery to LLM model"
+    ],
+    "commits": [],
+    "code_references": [
+      "IMPROVEMENT_CHANGELOG.md",
+      "README.md",
+      "WRITE-UP.md"
+    ]
+  }
+}
