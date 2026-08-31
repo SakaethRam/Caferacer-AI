@@ -3,7 +3,9 @@
 import readline from 'readline';
 import { exec } from 'child_process';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
+import AdmZip from 'adm-zip';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,6 +81,68 @@ function promptInteractive() {
   });
 }
 
+function createLocalZipBuffer(dirPath) {
+  const zip = new AdmZip();
+  const folderName = path.basename(dirPath) || 'workspace';
+
+  const IGNORE_DIRS = new Set([
+    'node_modules',
+    '.git',
+    '.github',
+    'dist',
+    'build',
+    'out',
+    'coverage',
+    '.next',
+    '.vercel',
+  ]);
+
+  function walkAndZip(currentDir, relativePrefix = '') {
+    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.name.startsWith('.')) continue;
+
+      const fullPath = path.join(currentDir, entry.name);
+      const zipPath = relativePrefix ? `${relativePrefix}/${entry.name}` : entry.name;
+
+      if (entry.isDirectory()) {
+        if (IGNORE_DIRS.has(entry.name.toLowerCase())) continue;
+        walkAndZip(fullPath, zipPath);
+      } else if (entry.isFile()) {
+        try {
+          const content = fs.readFileSync(fullPath);
+          zip.addFile(zipPath, content);
+        } catch {
+          // Ignore unreadable files
+        }
+      }
+    }
+  }
+
+  walkAndZip(dirPath);
+  return { buffer: zip.toBuffer(), folderName };
+}
+
+async function uploadZipArchive(dirPath) {
+  const { buffer, folderName } = createLocalZipBuffer(dirPath);
+  const url = `${SERVER_URL}/api/repo/ingest-zip`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/zip',
+      'X-Repo-Name': folderName,
+    },
+    body: buffer,
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || `HTTP ${response.status}`);
+  }
+  return data;
+}
+
 async function main() {
   const isServerAlive = await checkServerHealth();
   if (!isServerAlive) {
@@ -98,12 +162,12 @@ async function main() {
 
   // Option 2: Root (Current Directory) — Step 02 auto-run in terminal CLI
   const cwd = process.cwd();
-  console.log(`\n[STEP 02 ANALYZE] Parsing AST and extracting dependency graph from: ${cwd}`);
-  console.log('Running ingestion engine...');
+  console.log(`\n[STEP 02 ANALYZE] Packaging local workspace and parsing AST at: ${cwd}`);
+  console.log('Sending source archive to CafeRacer engine...');
 
   let repoId = '';
   try {
-    const data = await postJSON('/api/repo/ingest-local', { path: cwd });
+    const data = await uploadZipArchive(cwd);
     repoId = data.repoId;
   } catch (err) {
     console.error(`\n✖ Ingestion failed: ${err.message}`);
