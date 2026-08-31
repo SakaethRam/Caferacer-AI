@@ -233,30 +233,28 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
 ---
 
-## 7. Installation and Development Setup
+## 7. Installation and CLI Setup
 
-1. Clone Repository and Install Dependencies:
+### For End-Users (Instant CLI Usage)
+
+Users do **not** need to configure any database or Supabase credentials. The CLI connects to CafeRacer's managed cloud API service out of the box.
+
+1. Install globally via npm (or clone and link):
 ```bash
-git clone https://github.com/your-username/caferacer.git
-cd caferacer
-npm install
+npm install -g https://github.com/SakaethRam/Caferacer-AI.git
 ```
 
-2. Link CLI Binary Executable Globally:
-To allow the `caferacer` CLI command to run from any terminal directory:
+Or by cloning locally:
 ```bash
+git clone https://github.com/SakaethRam/Caferacer-AI.git
+cd Caferacer-AI
+npm install
 npm link
 ```
 
-3. Build Client and Server Assets:
+2. Run the CLI in any repository on your machine:
 ```bash
-npm run build
-```
-
-4. Start Full-Stack Development Environment:
-To run both the Vite frontend client (Port 3000) and Express server backend (Port 5000) concurrently:
-```bash
-npm run dev
+caferacer
 ```
 
 ---
@@ -271,8 +269,8 @@ npm run dev
 caferacer
 ```
 3. Choose an ingestion pathway:
-   - Option 1 (Github Repo): Opens `https://caferacer-nu.vercel.app/caferacer-console?step=repo` in your default browser.
-   - Option 2 (Root): Ingests the current directory via local AST analysis, generates the graph, and opens `https://caferacer-nu.vercel.app/caferacer-console?repoId=<generated_id>&step=understand` in your default browser.
+   - **Option 1 (Github Repo):** Redirects to `https://caferacer-nu.vercel.app/caferacer-console?step=repo` in your default browser.
+   - **Option 2 (Root):** Ingests your local working directory via AST parsing, generates the dependency graph, and opens `https://caferacer-nu.vercel.app/caferacer-console?repoId=<generated_id>&step=understand` in your default browser.
 
 ### Option B: Web Console Interface
 
@@ -286,4 +284,4 @@ caferacer
 
 ## 9. License
 
-See `LICENSE` for further details.
+Distributed under the MIT License. See `LICENSE` for further details.
