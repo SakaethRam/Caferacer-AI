@@ -191,17 +191,17 @@ The data flow within CafeRacer moves through four distinct operational phases: I
 
 Users do **not** need to configure any database or Supabase credentials. The CLI connects to CafeRacer's managed cloud API service out of the box.
 
-1. Install globally via npm (or clone and link):
-```bash
-npm install -g https://github.com/SakaethRam/Caferacer-AI.git
-```
-
-Or by cloning locally:
+1. Install globally by cloning the Git repository and completing a few setup procedures:
 ```bash
 git clone https://github.com/SakaethRam/Caferacer-AI.git
+```
+```bash
 cd Caferacer-AI
 npm install
 npm link
+```
+```bash
+/<TARGET_DIRECTORY>
 ```
 
 2. Run the CLI in any codebase directory on your machine:
